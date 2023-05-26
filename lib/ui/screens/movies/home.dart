@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/entities/movie_entity.dart';
+import '../../widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String name = 'home-screen';
@@ -33,19 +34,27 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   Widget build(BuildContext context) {
     final List<Movie> nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
-    return ListView.builder(
-      itemCount: nowPlayingMovies.length,
-      itemBuilder: (context, index) {
-        final Movie movie = nowPlayingMovies[index];
-        return ListTile(
-          title: Text(
-            movie.title,
-          ),
-          subtitle: Text(
-            movie.overview,
-          ),
-        );
-      },
+    return Column(
+      children: [
+        const CustomAppbar(),
+        MoviesSlideshow(movies: nowPlayingMovies),
+        // Expanded(
+        //   child: ListView.builder(
+        //     itemCount: nowPlayingMovies.length,
+        //     itemBuilder: (context, index) {
+        //       final Movie movie = nowPlayingMovies[index];
+        //       return ListTile(
+        //         title: Text(
+        //           movie.title,
+        //         ),
+        //         subtitle: Text(
+        //           movie.overview,
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ),
+      ],
     );
   }
 }
