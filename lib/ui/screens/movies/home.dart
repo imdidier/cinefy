@@ -1,4 +1,4 @@
-import 'package:cinefy/ui/providers/movies/movies_providers.dart';
+import 'package:cinefy/ui/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +13,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: _HomeView(),
+      bottomNavigationBar: CustomBottomNavigator(),
     );
   }
 }
@@ -33,11 +34,17 @@ class _HomeViewState extends ConsumerState<_HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Movie> nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    // final List<Movie> nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
+    final List<Movie> slideShowMovies = ref.watch(moviesSlideshowProvider);
     return Column(
       children: [
         const CustomAppbar(),
-        MoviesSlideshow(movies: nowPlayingMovies),
+        MoviesSlideshow(movies: slideShowMovies),
+        MovieHorizontalList(
+          movies: slideShowMovies,
+          title: 'En cines',
+          subTitle: 'Lunes pai',
+        ),
         // Expanded(
         //   child: ListView.builder(
         //     itemCount: nowPlayingMovies.length,
