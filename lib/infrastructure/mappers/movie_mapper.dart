@@ -15,7 +15,7 @@ class MovieMapper {
         overview: movieDB.overview,
         popularity: movieDB.popularity,
         posterPath: (movieDB.posterPath != '')
-            ? 'https://image.tmdb.org/t/p/  w400${movieDB.posterPath}'
+            ? 'https://image.tmdb.org/t/p/w400${movieDB.posterPath}'
             : 'sin-poster',
         releaseDate: movieDB.releaseDate,
         title: movieDB.title,

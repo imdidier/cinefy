@@ -1,3 +1,4 @@
+export 'package:cinefy/ui/widgets/share/splash_loader.dart';
 export 'package:cinefy/ui/widgets/movies/movie_horizontal_list.dart';
 export 'package:cinefy/ui/widgets/share/custom_bottom_navigation.dart';
 export 'package:cinefy/ui/widgets/movies/movies_slideshow.dart';
