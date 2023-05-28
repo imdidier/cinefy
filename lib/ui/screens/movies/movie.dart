@@ -1,7 +1,9 @@
 import 'package:cinefy/ui/providers/movies/movie_details_provider.dart';
+import 'package:cinefy/ui/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../domain/entities/actor.dart';
 import '../../../domain/entities/movie_entity.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
@@ -18,6 +20,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
   void initState() {
     super.initState();
     ref.read(movieDetailsProvider.notifier).loadMovie(widget.movieId);
+    ref.read(actorsByMovieProvider.notifier).loadActors(widget.movieId);
   }
 
   @override
@@ -118,8 +121,59 @@ class _MovieDetails extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 200),
+        _ActorsByMovie(movieId: movie.id.toString()),
+        const SizedBox(height: 60),
       ],
+    );
+  }
+}
+
+class _ActorsByMovie extends ConsumerWidget {
+  final String movieId;
+  const _ActorsByMovie({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).textTheme;
+    final actorsByMovie = ref.watch(actorsByMovieProvider);
+    if (actorsByMovie[movieId] == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    final List<Actor>? actors = actorsByMovie[movieId];
+    return SizedBox(
+      height: 250,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: actors!.length,
+        itemBuilder: (context, index) {
+          final Actor actor = actors[index];
+          return Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    actor.profilePath,
+                    fit: BoxFit.cover,
+                    width: 150,
+                  ),
+                ),
+              ),
+              const SizedBox(),
+              SizedBox(
+                width: 140,
+                child: Text(
+                  actor.name,
+                  style: textStyle.titleMedium,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -133,7 +187,7 @@ class _CustomSliverAppbar extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
       backgroundColor: Colors.black26,
-      expandedHeight: size.height * 0.67,
+      expandedHeight: size.height * 0.667,
       foregroundColor: Colors.white,
       flexibleSpace: FlexibleSpaceBar(
         // title: Text(
