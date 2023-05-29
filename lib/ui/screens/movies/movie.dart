@@ -150,6 +150,7 @@ class _ActorsByMovie extends ConsumerWidget {
         itemBuilder: (context, index) {
           final Actor actor = actors[index];
           return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -187,14 +188,9 @@ class _CustomSliverAppbar extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
       backgroundColor: Colors.black26,
-      expandedHeight: size.height * 0.667,
+      expandedHeight: size.height * 0.666,
       foregroundColor: Colors.white,
       flexibleSpace: FlexibleSpaceBar(
-        // title: Text(
-        //   movie.title,
-        //   style: const TextStyle(fontSize: 18),
-        //   textAlign: TextAlign.start,
-        // ),
         background: Stack(
           children: [
             SizedBox.expand(
