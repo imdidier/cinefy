@@ -187,6 +187,16 @@ class _CustomSliverAppbar extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.favorite_border_outlined),
+          // icon: const Icon(
+          //   Icons.favorite_rounded,
+          //   color: Colors.red,
+          // ),
+        )
+      ],
       backgroundColor: Colors.black26,
       expandedHeight: size.height * 0.666,
       foregroundColor: Colors.white,
@@ -199,21 +209,54 @@ class _CustomSliverAppbar extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
             ),
-            const SizedBox.expand(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.black38,
-                      Colors.transparent,
-                    ],
-                    begin: Alignment.topLeft,
-                    stops: [0.0, 0.3],
-                  ),
-                ),
-              ),
+            const _CustomGradient(
+              colors: [
+                Colors.black38,
+                Colors.transparent,
+              ],
+              stops: [0.0, 0.3],
+              begin: Alignment.topLeft,
+              end: Alignment.centerRight,
+            ),
+            const _CustomGradient(
+              colors: [
+                Colors.black38,
+                Colors.transparent,
+              ],
+              stops: [0.0, 0.3],
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CustomGradient extends StatelessWidget {
+  final List<double> stops;
+  final Alignment begin;
+  final Alignment end;
+  final List<Color> colors;
+  const _CustomGradient({
+    required this.stops,
+    required this.begin,
+    required this.end,
+    required this.colors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: colors,
+            begin: begin,
+            stops: stops,
+            end: end,
+          ),
         ),
       ),
     );
