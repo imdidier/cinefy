@@ -2,12 +2,15 @@ import 'package:cinefy/ui/screens/screens.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/home/0',
   routes: [
     GoRoute(
-      path: '/',
+      path: '/home/:view',
       name: HomeScreen.name,
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) {
+        final viewIndex = state.pathParameters['view'] ?? '0';
+        return HomeScreen(viewIndex: int.parse(viewIndex));
+      },
       routes: [
         GoRoute(
           path: 'movie/:id',
@@ -19,5 +22,9 @@ final appRouter = GoRouter(
         ),
       ],
     ),
+    GoRoute(
+      path: '/',
+      redirect: (_, __) => '/home/0',
+    )
   ],
 );
