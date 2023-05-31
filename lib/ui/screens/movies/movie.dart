@@ -195,7 +195,7 @@ class _CustomSliverAppbar extends StatelessWidget {
           //   Icons.favorite_rounded,
           //   color: Colors.red,
           // ),
-        )
+        ),
       ],
       backgroundColor: Colors.black26,
       expandedHeight: size.height * 0.666,
