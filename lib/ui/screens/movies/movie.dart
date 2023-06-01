@@ -1,4 +1,3 @@
-import 'package:cinefy/ui/providers/movies/movie_details_provider.dart';
 import 'package:cinefy/ui/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -128,6 +127,13 @@ class _MovieDetails extends StatelessWidget {
   }
 }
 
+final isFavoriteMovieProvider = FutureProvider.family.autoDispose(
+  (ref, int movieId) async {
+    final localStorageRepository = ref.watch(localStorageReposirotyProvider);
+    return localStorageRepository.isMovieFavorite(movieId);
+  },
+);
+
 class _ActorsByMovie extends ConsumerWidget {
   final String movieId;
   const _ActorsByMovie({required this.movieId});
@@ -179,22 +185,32 @@ class _ActorsByMovie extends ConsumerWidget {
   }
 }
 
-class _CustomSliverAppbar extends StatelessWidget {
+class _CustomSliverAppbar extends ConsumerWidget {
   final Movie movie;
   const _CustomSliverAppbar({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue isFavoriteFuture =
+        ref.watch(isFavoriteMovieProvider(movie.id));
     final size = MediaQuery.of(context).size;
     return SliverAppBar(
       actions: [
         IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.favorite_border_outlined),
-          // icon: const Icon(
-          //   Icons.favorite_rounded,
-          //   color: Colors.red,
-          // ),
+          onPressed: () {
+            ref.watch(localStorageReposirotyProvider).toggleFavorite(movie);
+            ref.invalidate(isFavoriteMovieProvider(movie.id));
+          },
+          icon: isFavoriteFuture.when(
+            data: (isFavorite) => isFavorite
+                ? const Icon(
+                    Icons.favorite_rounded,
+                    color: Colors.red,
+                  )
+                : const Icon(Icons.favorite_border_outlined),
+            error: (_, __) => throw UnimplementedError(),
+            loading: () => const CircularProgressIndicator.adaptive(),
+          ),
         ),
       ],
       backgroundColor: Colors.black26,

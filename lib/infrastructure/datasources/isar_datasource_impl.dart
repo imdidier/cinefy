@@ -1,6 +1,7 @@
 import 'package:cinefy/domain/datasources/local_storage_datasource.dart';
 import 'package:cinefy/domain/entities/movie_entity.dart';
 import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 
 class IsarDatasourceImpl extends LocalStorageDatasource {
   late Future<Isar> dataBase;
@@ -10,8 +11,13 @@ class IsarDatasourceImpl extends LocalStorageDatasource {
   }
 
   Future<Isar> openDataBase() async {
+    final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
-      return await Isar.open([MovieSchema], directory: '', inspector: true);
+      return await Isar.open(
+        [MovieSchema],
+        directory: dir.path,
+        inspector: true,
+      );
     }
     return Future.value(Isar.getInstance());
   }
@@ -39,7 +45,7 @@ class IsarDatasourceImpl extends LocalStorageDatasource {
         await isar.movies.filter().idEqualTo(movie.id).findFirst();
     if (favoriteMovie != null) {
       //Eliminar datos de Isar
-      isar.writeTxnSync(() => isar.movies.delete(favoriteMovie.isarId!));
+      isar.writeTxn(() => isar.movies.delete(favoriteMovie.isarId!));
       return;
     }
     //Insertar datos en la base de datos Isar
