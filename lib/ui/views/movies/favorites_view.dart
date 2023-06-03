@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/entities/movie_entity.dart';
+import '../../widgets/widgets.dart';
 
 class FavoritesView extends ConsumerStatefulWidget {
   const FavoritesView({Key? key}) : super(key: key);
@@ -11,10 +12,22 @@ class FavoritesView extends ConsumerStatefulWidget {
 }
 
 class FavoritesViewState extends ConsumerState<FavoritesView> {
+  bool isLoading = false;
+  bool isLastpage = false;
+
   @override
   void initState() {
     super.initState();
-    ref.read(favoriteMoviesProvider.notifier).loadNextPage();
+    loadNextpage();
+  }
+
+  void loadNextpage() async {
+    if (isLoading || isLastpage) return;
+    isLoading = true;
+    final List<Movie> movies =
+        await ref.read(favoriteMoviesProvider.notifier).loadNextPage();
+    isLoading = false;
+    if (movies.isEmpty) isLastpage = true;
   }
 
   @override
@@ -22,16 +35,9 @@ class FavoritesViewState extends ConsumerState<FavoritesView> {
     final favoritesMovies = ref.watch(favoriteMoviesProvider).values.toList();
 
     return Scaffold(
-      body: ListView.builder(
-        itemCount: favoritesMovies.length,
-        itemBuilder: (context, index) {
-          final Movie movie = favoritesMovies[index];
-          return ListTile(
-            title: Text(
-              movie.title,
-            ),
-          );
-        },
+      body: MovieMansory(
+        movies: favoritesMovies,
+        loadNextPage: loadNextpage,
       ),
     );
   }
